@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>活动物料自动化校验工具</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #0070f3; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>活动物料自动化校验</h1>
+        <p>粘贴网页 JSON 配置进行校验：</p>
+        <textarea id="configInput" placeholder='{"rewards": [{"name": "item1", "prob": 0.5}, {"name": "item2", "prob": 0.5}]}'></textarea>
+        <button onclick="runValidation()">开始校验</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function runValidation() {
+            const config = JSON.parse(document.getElementById('configInput').value);
+            const response = await fetch('/api/validate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({config: config})
+            });
+            const data = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
